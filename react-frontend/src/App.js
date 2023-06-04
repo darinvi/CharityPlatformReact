@@ -1,23 +1,31 @@
-import logo from './logo.svg';
 import './App.css';
+import {useState} from 'react'
 
 function App() {
+
+  const [data, setData] = useState(null)
+
+  const render_addresses = data.map( e => {
+    if(e.length > 1){
+      return <option>{e}</option>
+    }
+  })
+
+  function handleButtonClick(){
+    fetch('http://localhost:5000/get-addresses')
+      .then((response) => response.json())
+      .then((jsonData) => {
+        setData(jsonData.output);
+      })
+      .catch((error) => {
+        console.log('Error:', error);
+      });
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={handleButtonClick}>Fetch</button>
+      {data && <select>{render_addresses}</select>}
     </div>
   );
 }
