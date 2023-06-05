@@ -128,6 +128,50 @@ app.post('/create-campaign', (req, res) => {
 
 
 
+app.post('/donate', (req, res) => {
+
+  const { platform, signer, id, amount } = req.body;
+  
+  console.log(req.body);
+
+  const hardhatScript = spawn(getNPXPath(), [
+    'hardhat', 
+    'donate',
+    '--platform',
+    platform,
+    '--account',
+    signer,
+    '--id', 
+    id,
+    '--value',
+    amount, 
+    '--network', 
+    'localhost'
+  ]);
+
+  let scriptOutput = '';
+
+  hardhatScript.stdout.on('data', (data) => {
+    scriptOutput += data.toString();
+  });
+
+  hardhatScript.stderr.on('data', (data) => {
+    console.error(data.toString());
+  });
+
+  hardhatScript.on('close', (code) => {
+    if (code === 0) {
+      // Script executed successfully
+      res.json({ success: true, output: scriptOutput });
+    } else {
+      // Script encountered an error
+      res.json({ success: false, output: scriptOutput });
+    }
+  });
+});
+
+
+
 const port = 5000; 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

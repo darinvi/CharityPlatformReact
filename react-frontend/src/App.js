@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 import FetchAddresses from './components/fetchAddresses.js';
 import Deploy from './components/deploy.js';
-import Contribute from './components/contribute.js'
+import Donate from './components/Donate.js';
 
 function App() {
 
@@ -20,33 +20,34 @@ function App() {
   }
 
   return (
-      <div>
-        <FetchAddresses
-          currentAddress={currentAddress}
-          handleAddressSelect={handleAddressSelect}
+    <div>
+      <FetchAddresses
+        currentAddress={currentAddress}
+        handleAddressSelect={handleAddressSelect}
+        allAddresses={allAddresses}
+        setAllAddresses={setAllAddresses}
+      />
+      {currentAddress &&
+        <Deploy
+          deployedAddress={deployedAddress}
+          setDeployedAddress={setDeployedAddress}
+          deployer={currentAddress}
           allAddresses={allAddresses}
-          setAllAddresses={setAllAddresses}
-        />
-        {currentAddress &&
-          <Deploy
-            deployedAddress={deployedAddress}
-            setDeployedAddress={setDeployedAddress}
-            deployer={currentAddress}
-            allAddresses={allAddresses}
-            allContracts={allContracts}
-            setAllContracts={setAllContracts}
-            campaigns={campaigns}
-            setCampaigns={setCampaigns}
-          />}
-        {(allAddresses && currentAddress && Object.keys(campaigns).length > 0) &&
-          <Contribute
-            allAddresses={allAddresses}
-            currentContract={currentContract}
-            setCurrentContract={setCurrentContract}
-            allContracts={allContracts}
-            campaigns={campaigns}
-          />}
-      </div>
+          allContracts={allContracts}
+          setAllContracts={setAllContracts}
+          campaigns={campaigns}
+          setCampaigns={setCampaigns}
+        />}
+      {(allAddresses && currentAddress && Object.keys(campaigns).length > 0) &&
+        <Donate
+          deployedAddress={deployedAddress}
+          allAddresses={allAddresses}
+          currentContract={currentContract}
+          setCurrentContract={setCurrentContract}
+          allContracts={allContracts}
+          campaigns={campaigns}
+        />}
+    </div>
   );
 }
 

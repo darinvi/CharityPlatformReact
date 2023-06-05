@@ -3,7 +3,6 @@ import { useState } from 'react'
 export default function FetchAddresses(props) {
 
     const [loading, setLoading] = useState(false);
-    // const [fetched, setFetched] = useState(false);
 
     const render_addresses = props.allAddresses && props.allAddresses.map(e => {
         if (e.length > 1) {
@@ -28,7 +27,7 @@ export default function FetchAddresses(props) {
 
     return (
         <div>
-            <button onClick={handleButtonClick} disabled={props.allAddresses ? true : false}>Fetch HH Addresses</button>
+            <button onClick={handleButtonClick} disabled={props.allAddresses ? true : false}>Fetch Hardhat Addresses</button>
             {loading && <h1>Loading...</h1>}
             {(props.allAddresses && !props.currentAddress) && <>
                 <label htmlFor='deployer-select'>Select deployer</label>

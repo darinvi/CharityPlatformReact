@@ -18,7 +18,7 @@ task("create-campaign", "Create a campaign")
         const tx = await platform.createCharity(
             taskArgs.name,
             taskArgs.description,
-            taskArgs.goal,
+            hre.ethers.utils.parseEther(taskArgs.goal),
             taskArgs.duration
         );
 
