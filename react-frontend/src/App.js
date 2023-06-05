@@ -4,10 +4,12 @@ import {useState} from 'react'
 function App() {
 
   const [data, setData] = useState(null)
+  const [currentAddress, setCurrentAddress] = useState(null)
 
-  const render_addresses = data.map( e => {
+  const render_addresses = data && data.map( e => {
     if(e.length > 1){
-      return <option>{e}</option>
+      const replaced = e.replace(/['\,]/g, '');
+      return <option value={replaced}>{replaced}</option>
     }
   })
 
@@ -22,10 +24,15 @@ function App() {
       });
   }
 
+  function handleAddressSelect (e) {
+    setCurrentAddress(e.target.value);
+  }
+
   return (
     <div className="App">
-      <button onClick={handleButtonClick}>Fetch</button>
-      {data && <select>{render_addresses}</select>}
+      <button onClick={handleButtonClick}>Fetch HH Addresses</button>
+      {data && <select onChange={handleAddressSelect}>{render_addresses}</select>}
+      {currentAddress && <h1>{currentAddress}</h1>}
     </div>
   );
 }

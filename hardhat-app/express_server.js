@@ -23,7 +23,6 @@ app.get('/get-addresses', (req, res) => {
       // Push each line of output to the array
       const lines = data.toString().split('\n');
       scriptOutput.push(...lines);
-      console.log(lines[1])
   });
 
   hardhatScript.stderr.on('data', (data) => {
