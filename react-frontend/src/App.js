@@ -2,7 +2,7 @@ import './App.css';
 import {useState} from 'react'
 
 import FetchAddresses from './components/fetchAddresses.js';
-import Test from './components/test.js';
+import Deploy from './components/deploy.js';
 
 function App() {
 
@@ -15,7 +15,7 @@ function App() {
   return (
     <div>
       <FetchAddresses currentAddress={currentAddress} handleAddressSelect={handleAddressSelect}/>
-      <Test />
+      {currentAddress && <Deploy deployer={currentAddress}/>}
     </div>
   );
 }

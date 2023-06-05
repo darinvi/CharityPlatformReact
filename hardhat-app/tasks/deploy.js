@@ -8,5 +8,5 @@ task("deploy","Deploy")
         
         await platform.deployed();
 
-        console.log(`platform deployed to ${platform.address} with owner ${taskArgs.deployer}`);
+        console.log(platform.address);
     });
