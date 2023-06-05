@@ -11,6 +11,10 @@ export default function Contribute(props) {
         }
     })
 
+    const render_campaigns = props.campaigns.length > 0 && props.campaigns.map(e => {
+            return <option value={e}>{e}</option>
+    })
+
 
     //   function Contribute(props){
     //     fetch(`http://localhost:5000/contribute?address=${props.contributor}`)
@@ -26,9 +30,15 @@ export default function Contribute(props) {
     return (
         <div>
             <label htmlFor='contributor-select'>Select signer</label>
-            <select id='contributor-select'>{render_addresses}</select>
+            <select id='contributor-select'>
+                <option>Select an address</option>
+                {render_addresses}
+            </select>
             <label htmlFor='contract-select'>Select campaign</label>
-            <select id='contract-select' ></select>
+            <select id='contract-select'>{render_campaigns}</select>
+            <label htmlFor='amount'>ETH amount</label>
+            <input type='number' placeholder='amount in ETH'></input>
+            <button className='inlineButton'>Contribute</button>
         </div>
     );
 }

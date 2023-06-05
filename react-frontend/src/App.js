@@ -11,6 +11,8 @@ function App() {
   const [allAddresses, setAllAddresses] = useState(null);
   const [allContracts, setAllContracts] = useState(null);
   const [currentContract, setCurrentContract] = useState(null);
+  const [deployedAddress, setDeployedAddress] = useState(null);
+  const [campaigns, setCampaigns] = useState([]);
 
 
   function handleAddressSelect(e) {
@@ -18,29 +20,37 @@ function App() {
   }
 
   return (
-    <div>
-      <FetchAddresses
-        currentAddress={currentAddress}
-        handleAddressSelect={handleAddressSelect}
-        allAddresses={allAddresses}
-        setAllAddresses={setAllAddresses}
-      />
-      {currentAddress &&
-        <Deploy
-          deployer={currentAddress}
-          allAddresses={allAddresses}
-          allContracts={allContracts}
-          setAllContracts={setAllContracts}
-        />}
-      {}
-      {(allAddresses && currentAddress) &&
-        <Contribute
-          allAddresses={allAddresses}
-          currentContract={currentContract}
-          setCurrentContract={setCurrentContract}
-          allContracts={allContracts}
-        />}
-    </div>
+    <>
+      <container>
+        <div>
+          <FetchAddresses
+            currentAddress={currentAddress}
+            handleAddressSelect={handleAddressSelect}
+            allAddresses={allAddresses}
+            setAllAddresses={setAllAddresses}
+          />
+          {currentAddress &&
+            <Deploy
+              deployedAddress={deployedAddress}
+              setDeployedAddress={setDeployedAddress}
+              deployer={currentAddress}
+              allAddresses={allAddresses}
+              allContracts={allContracts}
+              setAllContracts={setAllContracts}
+              campaigns={campaigns}
+              setCampaigns={setCampaigns}
+            />}
+          {(allAddresses && currentAddress && campaigns.length > 0) &&
+            <Contribute
+              allAddresses={allAddresses}
+              currentContract={currentContract}
+              setCurrentContract={setCurrentContract}
+              allContracts={allContracts}
+              campaigns={campaigns}
+            />}
+        </div>
+      </container>
+    </>
   );
 }
 

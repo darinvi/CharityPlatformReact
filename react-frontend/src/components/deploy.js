@@ -3,7 +3,7 @@ import CreateCampaign from './createCampaign';
 
 export default function Deploy(props) {
 
-    const [data, setData] = useState(null)
+    // const [deployedAddress, setDeployedAddress] = useState(null)
     const [loading, setLoading] = useState(false);
     const [deployed, setDeployed] = useState(false);
 
@@ -12,7 +12,7 @@ export default function Deploy(props) {
         fetch(`http://localhost:5000/deploy-contract?address=${props.deployer}`)
             .then((response) => response.json())
             .then((jsonData) => {
-                setData(jsonData.output);
+                props.setDeployedAddress(jsonData.output);
                 setLoading(false);
                 setDeployed(true);
             })
@@ -26,8 +26,13 @@ export default function Deploy(props) {
         <div>
             <button onClick={handleButtonClick} disabled={deployed}>deploy with deployer </button>
             {loading && <h1>Loading...</h1>}
-            {(data && !loading) && <h1>Successfully deployed at: {data}</h1>}
-            {deployed && <CreateCampaign allAddresses={props.allAddresses}/>}
+            {(props.deployedAddress && !loading) && <h1>Successfully deployed at: {props.deployedAddress}</h1>}
+            {deployed && <CreateCampaign
+                deployedAddress={props.deployedAddress}
+                allAddresses={props.allAddresses}
+                campaigns={props.campaigns}
+                setCampaigns={props.setCampaigns}
+            />}
         </div>
     );
 }

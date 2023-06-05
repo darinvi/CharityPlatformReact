@@ -1,8 +1,11 @@
 const express = require('express');
 const { spawn } = require('child_process');
+const { sign } = require('crypto');
 
 
 const app = express();
+
+app.use(express.json());
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -10,6 +13,15 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     next();
   });
+
+app.options('*', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.sendStatus(200);
+});
+
+
 
 app.get('/get-addresses', (req, res) => {
   // Run the Hardhat script as a child process
@@ -67,6 +79,54 @@ app.get('/deploy-contract', (req, res) => {
     }
   });
 });
+
+
+
+app.post('/create-campaign', (req, res) => {
+
+  const { platform, signer, name, description, goal, duration } = req.body;
+  
+  const hardhatScript = spawn(getNPXPath(), [
+    'hardhat', 
+    'create-campaign',
+    '--platform',
+    platform,
+    '--account',
+    signer,
+    '--name', 
+    name,
+    '--description',
+    description,
+    '--goal',
+    goal,
+    '--duration',
+    duration, 
+    '--network', 
+    'localhost'
+  ]);
+
+  let scriptOutput = '';
+
+  hardhatScript.stdout.on('data', (data) => {
+    scriptOutput += data.toString();
+  });
+
+  hardhatScript.stderr.on('data', (data) => {
+    console.error(data.trim().toString());
+  });
+
+  hardhatScript.on('close', (code) => {
+    if (code === 0) {
+      // Script executed successfully
+      res.json({ success: true, output: scriptOutput.trim() });
+    } else {
+      // Script encountered an error
+      res.json({ success: false, output: scriptOutput });
+    }
+  });
+});
+
+
 
 const port = 5000; 
 app.listen(port, () => {

@@ -30,9 +30,12 @@ export default function FetchAddresses(props) {
         <div>
             <button onClick={handleButtonClick} disabled={props.allAddresses ? true : false}>Fetch HH Addresses</button>
             {loading && <h1>Loading...</h1>}
-            {props.allAddresses && <>
+            {(props.allAddresses && !props.currentAddress) && <>
                 <label htmlFor='deployer-select'>Select deployer</label>
-                <select id='deployer-select' onChange={props.handleAddressSelect}>{render_addresses}</select>
+                <select id='deployer-select' onChange={props.handleAddressSelect}>
+                    <option>Select an address</option> 
+                    {render_addresses}
+                </select>
             </>}
                 {props.currentAddress && <h1>Deployer: {props.currentAddress}</h1>}
             </div>

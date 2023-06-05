@@ -6,9 +6,12 @@ import './CampaignInterface.sol';
 
 contract CharityPlatform {
 
-    event DonationMade(uint id, address donator, uint amount);
-    event Refund(uint id, address donator, uint amount);
+    event CampaignCreated(uint indexed id, address indexed campaign);
+    event DonationMade(uint indexed id, address indexed donator, uint amount);
+    event Refund(uint indexed id, address indexed donator, uint amount);
 
+    //campaign id -> all donations
+    mapping (uint => address[]) donations;
     //id -> campaign
     mapping (uint => address) campaigns;
     //campaign id -> collected or not
@@ -16,15 +19,16 @@ contract CharityPlatform {
     //campaign id -> donator -> amount
     mapping (uint => mapping (address => bool)) private alreadyRefunded;
 
-    uint currCharity;
+    uint public currCharity;
     
     function createCharity(
     string memory name,
     string memory description,
     uint fundingGoal,
-    uint duration) 
+    uint duration)
     external {
         campaigns[currCharity] = address(new Campaign(name,description,fundingGoal,duration,msg.sender));
+        emit CampaignCreated(currCharity, campaigns[currCharity]);
         currCharity++;
     }
 
@@ -35,6 +39,8 @@ contract CharityPlatform {
         
         //the mint will aso trigger nft creation for the donator
         CampaignInterface(campaign).mint(msg.sender,msg.value);
+        
+        donations[_id].push(msg.sender);
 
         emit DonationMade(_id, msg.sender, msg.value);
     }
@@ -51,7 +57,21 @@ contract CharityPlatform {
         require(success,"err");
     }
 
+    // refunds to everyone
+    function refundAll(uint id) external {
+        address campaign = campaigns[id];
+        require(block.timestamp > CampaignInterface(campaign).deadline(),"campaign hasn't expired");
+        require(CampaignInterface(campaign).totalSupply() < CampaignInterface(campaign).maxSupply(),"Can't refund successful campaign");
 
+        for (uint i; i < donations[id].length; i++){
+            address donator = donations[id][i];
+            if (!alreadyRefunded[id][donator] && CampaignInterface(campaign).balanceOf(donator) > 0){ //check
+                alreadyRefunded[id][donator] = true; //effct
+                (bool success,) = donator.call{value:CampaignInterface(campaign).balanceOf(donator)}(""); //interaction
+                require(success,"err");
+            }
+        }
+    }
 
     // only refunds to the msg.sender
     function refund(uint id) external {
@@ -67,5 +87,9 @@ contract CharityPlatform {
         require(success,"err");
 
         emit Refund(id, msg.sender, balance);
+    }
+
+    function getCampaignAddress(uint id) external view returns(address){
+        return campaigns[id];
     }
 }

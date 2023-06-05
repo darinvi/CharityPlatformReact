@@ -2,6 +2,10 @@ button {
   display: block;
 }
 
-#campaignButton {
-  display: flex;
+.inlineButton {
+  display: inline;
+}
+
+div {
+  margin-top: 3rem;
 }
