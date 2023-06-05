@@ -1,4 +1,4 @@
-task("deploy","Deploy")
+task("deploy-contract","Deploy a contract")
     .addParam('deployer','Address of deployer')
     .setAction(async(taskArgs, hre) =>{
         // const [deployer] = await hre.ethers.getSigners();

@@ -42,10 +42,10 @@ app.get('/get-addresses', (req, res) => {
 
 
 
-app.get('/deploy', (req, res) => {
+app.get('/deploy-contract', (req, res) => {
 
   // Run the Hardhat deploy task as a child process
-  const hardhatScript = spawn(getNPXPath(), ['hardhat', 'deploy', '--deployer', req.query.address, '--network', 'localhost']);
+  const hardhatScript = spawn(getNPXPath(), ['hardhat', 'deploy-contract', '--deployer', req.query.address, '--network', 'localhost']);
 
   let scriptOutput = '';
 

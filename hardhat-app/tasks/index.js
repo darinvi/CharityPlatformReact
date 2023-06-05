@@ -1,2 +1,3 @@
 // require('./getAddresses.js')
-  require('./deploy.js')
+  require('./deploy_contract.js')
+  require('./list_contracts.js')

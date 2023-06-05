@@ -1,8 +1,12 @@
 import { useState } from 'react'
 
-export default function Contribute(props) {
+export default function CreateCampaign(props) {
 
     const [data, setData] = useState(null)
+    const [name, setName] = useState(null)
+    const [description, setDescription] = useState(null)
+    const [fundingGoal, setFundingGoal] = useState(null)
+    const [duration, setDuration] = useState(null)
 
     const render_addresses = props.allAddresses && props.allAddresses.map(e => {
         if (e.length > 1) {
@@ -25,10 +29,13 @@ export default function Contribute(props) {
 
     return (
         <div>
-            <label htmlFor='contributor-select'>Select signer</label>
+            <label htmlFor='contributor-select'>Select campaig creator</label>
             <select id='contributor-select'>{render_addresses}</select>
-            <label htmlFor='contract-select'>Select campaign</label>
-            <select id='contract-select' ></select>
+            <input type='text' placeholder='campaign name'></input>
+            <input type='text' placeholder='campaign description'></input>
+            <input type='number' placeholder='funding goal'></input>
+            <input type='number' placeholder='duration'></input>
+            <button id='campaignButton'>Create campaign</button>
         </div>
     );
 }
