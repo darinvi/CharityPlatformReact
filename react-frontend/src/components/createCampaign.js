@@ -8,7 +8,7 @@ export default function CreateCampaign(props) {
     const [duration, setDuration] = useState(null);
     const [signer, setSigner] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [currentCampaign, setCurrentCampaign] = useState(0);
+    // const [campaignCounter, setCampaignCounter] = useState(0);
 
     const render_addresses = props.allAddresses && props.allAddresses.map(e => {
         if (e.length > 1) {
@@ -36,9 +36,12 @@ export default function CreateCampaign(props) {
             }),
         })
             .then((response) => response.json())
-            .then((data) => {
-                console.log("Success:", data.output);
-                props.setCampaigns([...props.campaigns, data.output])
+            .then((res) => {
+                console.log("Success:", res.output);
+                const count = Object.keys(props.campaigns).length;
+                console.log("count",count)
+                props.setCampaigns({...props.campaigns, [parseInt(count)] : res.output})
+                // setCampaignCounter(prev => prev + 1)
                 setLoading(false);
             })
             .catch((error) => {

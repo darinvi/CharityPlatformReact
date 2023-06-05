@@ -12,7 +12,7 @@ function App() {
   const [allContracts, setAllContracts] = useState(null);
   const [currentContract, setCurrentContract] = useState(null);
   const [deployedAddress, setDeployedAddress] = useState(null);
-  const [campaigns, setCampaigns] = useState([]);
+  const [campaigns, setCampaigns] = useState({});
 
 
   function handleAddressSelect(e) {
@@ -20,37 +20,33 @@ function App() {
   }
 
   return (
-    <>
-      <container>
-        <div>
-          <FetchAddresses
-            currentAddress={currentAddress}
-            handleAddressSelect={handleAddressSelect}
+      <div>
+        <FetchAddresses
+          currentAddress={currentAddress}
+          handleAddressSelect={handleAddressSelect}
+          allAddresses={allAddresses}
+          setAllAddresses={setAllAddresses}
+        />
+        {currentAddress &&
+          <Deploy
+            deployedAddress={deployedAddress}
+            setDeployedAddress={setDeployedAddress}
+            deployer={currentAddress}
             allAddresses={allAddresses}
-            setAllAddresses={setAllAddresses}
-          />
-          {currentAddress &&
-            <Deploy
-              deployedAddress={deployedAddress}
-              setDeployedAddress={setDeployedAddress}
-              deployer={currentAddress}
-              allAddresses={allAddresses}
-              allContracts={allContracts}
-              setAllContracts={setAllContracts}
-              campaigns={campaigns}
-              setCampaigns={setCampaigns}
-            />}
-          {(allAddresses && currentAddress && campaigns.length > 0) &&
-            <Contribute
-              allAddresses={allAddresses}
-              currentContract={currentContract}
-              setCurrentContract={setCurrentContract}
-              allContracts={allContracts}
-              campaigns={campaigns}
-            />}
-        </div>
-      </container>
-    </>
+            allContracts={allContracts}
+            setAllContracts={setAllContracts}
+            campaigns={campaigns}
+            setCampaigns={setCampaigns}
+          />}
+        {(allAddresses && currentAddress && Object.keys(campaigns).length > 0) &&
+          <Contribute
+            allAddresses={allAddresses}
+            currentContract={currentContract}
+            setCurrentContract={setCurrentContract}
+            allContracts={allContracts}
+            campaigns={campaigns}
+          />}
+      </div>
   );
 }
 

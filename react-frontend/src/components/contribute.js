@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 export default function Contribute(props) {
 
-    const [data, setData] = useState(null)
+    const [ID, setID] = useState(null);
 
     const render_addresses = props.allAddresses && props.allAddresses.map(e => {
         if (e.length > 1) {
@@ -11,7 +11,7 @@ export default function Contribute(props) {
         }
     })
 
-    const render_campaigns = props.campaigns.length > 0 && props.campaigns.map(e => {
+    const render_campaigns = Object.keys(props.campaigns).length > 0 && Object.keys(props.campaigns).map(e => {
             return <option value={e}>{e}</option>
     })
 
@@ -34,11 +34,15 @@ export default function Contribute(props) {
                 <option>Select an address</option>
                 {render_addresses}
             </select>
-            <label htmlFor='contract-select'>Select campaign</label>
-            <select id='contract-select'>{render_campaigns}</select>
+            <label htmlFor='contract-select'>Select campaign ID</label>
+            <select id='contract-select' onChange={(e)=>{setID(e.target.value)}}>
+                <option value="">Select Id</option>
+                {render_campaigns}
+            </select>
             <label htmlFor='amount'>ETH amount</label>
             <input type='number' placeholder='amount in ETH'></input>
             <button className='inlineButton'>Contribute</button>
+            {ID != "" && <p>Address Of campaign: {props.campaigns[ID]}</p>}
         </div>
     );
 }
