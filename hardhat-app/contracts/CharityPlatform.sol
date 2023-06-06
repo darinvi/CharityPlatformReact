@@ -92,4 +92,8 @@ contract CharityPlatform {
     function getCampaignAddress(uint id) external view returns(address){
         return campaigns[id];
     }
+
+    function getCampaignBalance(uint id) external view returns(uint){
+        return CampaignInterface(campaigns[id]).totalSupply();
+    }
 }

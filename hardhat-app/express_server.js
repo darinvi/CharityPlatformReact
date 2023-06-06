@@ -131,8 +131,6 @@ app.post('/create-campaign', (req, res) => {
 app.post('/donate', (req, res) => {
 
   const { platform, signer, id, amount } = req.body;
-  
-  console.log(req.body);
 
   const hardhatScript = spawn(getNPXPath(), [
     'hardhat', 

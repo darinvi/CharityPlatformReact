@@ -1,6 +1,6 @@
 const {
-  time,
-  loadFixture,
+    time,
+    loadFixture,
 } = require("@nomicfoundation/hardhat-network-helpers");
 const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
 const { expect } = require("chai");
@@ -9,118 +9,139 @@ const { expectRevert } = require("@openzeppelin/test-helpers");
 
 
 describe("CharityPlatform", function () {
-  
-  let charityPlatformUser, deployer, firstUser, secondUser, thirdUser;
-  
-  this.beforeAll(async function () {
-    
-    [deployer, firstUser, secondUser, thirdUser] = await ethers.getSigners();
-    
-    // const { platform } = await loadFixture(deployPlatform);
-    // charityPlatformUser = getFirstUserCharityPlatform(platform, firstUser);
-  })
 
-  async function deployPlatform() {
-    
-    const CharityPlatformFactory = await ethers.getContractFactory("CharityPlatform", deployer);
-    const platform = await CharityPlatformFactory.deploy();
+    let charityPlatformUser, deployer, firstUser, secondUser, thirdUser;
 
-    //ethers.utils.parseEther(val) used many times so returning it from toWei
-    const goal = toWei("100");
+    this.beforeAll(async function () {
 
-    const creator = platform.connect(firstUser);
+        [deployer, firstUser, secondUser, thirdUser] = await ethers.getSigners();
 
-    return { platform, creator, goal };
-  }
+        // const { platform } = await loadFixture(deployPlatform);
+        // charityPlatformUser = getFirstUserCharityPlatform(platform, firstUser);
+    })
 
-  async function createShortCampaign() {
-    const { platform, creator, goal} = await loadFixture(deployPlatform);
-    const five_seconds = 5;
-    await creator.createCharity("someName","someDescription",goal,five_seconds);
-    return {platform}
-  }
+    async function deployPlatform() {
 
-  async function makeContributions() {
-    const {platform} = await loadFixture(createShortCampaign)
-    
-    // const dividents = toWei("10");
-    const price = toWei("1");
-    
-    for (const user of [secondUser,thirdUser]){
-      const currUser = platform.connect(user);
-      await currUser.contribute(0,{value: price});        
+        const CharityPlatformFactory = await ethers.getContractFactory("CharityPlatform", deployer);
+        const platform = await CharityPlatformFactory.deploy();
+
+        //ethers.utils.parseEther(val) used many times so returning it from toWei
+        const goal = toWei("100");
+
+        const creator = platform.connect(firstUser);
+
+        return { platform, creator, goal };
     }
 
-    return {platform}
-  }
+    async function createShortCampaign() {
+        const { platform, creator, goal } = await loadFixture(deployPlatform);
+        const five_seconds = 5;
+        await creator.createCharity("someName", "someDescription", goal, five_seconds);
+        return { platform }
+    }
 
-  describe("Refund", function () {
-    it("Should succeed",async function () {
-      const { platform } = await loadFixture(makeContributions);
+    async function createLongCampaign() {
+        const { platform, creator, goal } = await loadFixture(deployPlatform);
+        const twenty_four_hours = 86_400;
+        await creator.createCharity("someName", "someDescription", goal, twenty_four_hours);
+        return { platform }
+    }
 
-      const charityPlatformUser = await platform.connect(firstUser);
+    describe("Donation", function () {
+        it("Should revert if donation exceeds remainder to goal", async function () {
+            const { platform } = await loadFixture(createLongCampaign);
 
-      //make sure the contributions have been succesfull.
-      expect(await charityPlatformUser.testTotalSupplyGetter(0)).to.equal(toWei("2"));
-      
-      //wait for the short campaign to expire
-      await delay(5000);
-      
-      await charityPlatformUser.refund(0);      
+            const currUser = await platform.connect(firstUser);
 
-      //make sure the funds have really been returned.
-      expect(await charityPlatformUser.testTotalSupplyGetter(0)).to.equal(0);
-      
+            const amount = toWei("101");
+
+            try {
+                await currUser.distribute(0, { value: price });
+            }
+            catch (error) {
+                expectRevert(error, "campaign has reached its goal");
+            }
+        });
+
+
+        it("Should revert if campaign expired", async function () {
+            const { platform } = await loadFixture(createShortCampaign);
+
+            const currUser = await platform.connect(firstUser);
+
+            const amount = toWei("10");
+
+            delay(6000);
+
+            expect(await currUser.donate(0, { value: amount })).to.be.revertedWith("Can't refund successful campaign")
+
+        });
+
+
+        it("should succeed", async function () {
+            const { platform } = await loadFixture(createLongCampaign);
+
+            const currUser = await platform.connect(firstUser);
+
+            const amount = toWei("10");
+
+            await currUser.donate(0, { value: amount })
+            
+            expect(BigInt(await currUser.getCampaignBalance(0))).to.equal(amount);
+            
+        });
     });
-  });
 
-  describe("Distributions", function () {
-    it("Should revert if not called by creator",async function () {
+    describe("collectFunds", function () {
+        it("Should revert if not called by creator", async function () {
 
-      const { platform } = await loadFixture(makeContributions);
-      const currUser = await platform.connect(secondUser);
-      
-      const price = toWei("5");
-      
-      try {
-        await currUser.distribute(0, {value: price});
-      } 
-      catch (error) {
-        expectRevert(error, "Only the creator can distribute");
-      }
+            const { platform } = await loadFixture(createLongCampaign);
+            
+            let currUser = await platform.connect(secondUser);
+            
+            //100 is the funding goal
+            const amount = toWei("100");
+            await currUser.donate(0, { value: amount })
+
+            currUser = await platform.connect(deployer)
+
+            try {
+                await currUser.collectFunds(0,secondUser.address);
+            }
+            catch (error) {
+                expectRevert(error, "Only creator can collect");
+            }
+        });
+
+        // it("should succeed", async function () {
+        //     const { platform } = await loadFixture(makeDonation);
+
+        //     //connecting the creator after making contributions with other accounts
+        //     const charityPlatformUser = platform.connect(firstUser);
+
+        //     //first calling 
+        //     let balance = BigInt(await ethers.provider.getBalance(secondUser.address));
+
+        //     await expect(balance < toWei("10000")).to.equal(true);
+
+        //     await charityPlatformUser.distribute(0, { value: toWei("10") });
+
+        //     balance = BigInt(await ethers.provider.getBalance(secondUser.address));
+        //     await expect(balance > toWei("10000")).to.equal(true);
+
+        // });
     });
-    
-    it("should succeed",async function () {
-      const { platform } = await loadFixture(makeContributions);
-      
-      //connecting the creator after making contributions with other accounts
-      const charityPlatformUser = platform.connect(firstUser);
-      
-      //first calling 
-      let balance = BigInt(await ethers.provider.getBalance(secondUser.address));
-
-      await expect(balance < toWei("10000")).to.equal(true);
-
-      await charityPlatformUser.distribute(0, {value: toWei("10")});
-      
-      balance = BigInt(await ethers.provider.getBalance(secondUser.address));
-      await expect(balance > toWei("10000")).to.equal(true);
-      
-    });
-
-
-  });
 });
 
 
 async function getFirstUserCharityPlatform(platform, firstUser) {
-  return platform.connect(firstUser)
+    return platform.connect(firstUser)
 }
 
 function delay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function toWei(val) {
-  return ethers.utils.parseEther(val);
+    return ethers.utils.parseEther(val);
 }

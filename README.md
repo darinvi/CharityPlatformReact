@@ -1,6 +1,7 @@
 # CharityPlatformReact
 
 1. cd .\hardhat-app\ to for the express server and hardhat node.
+    
     - Run "npm install"
     - Run "npx hardhat node" in order to start the local persistent blockchain.
     - open new terminal. Run "node express_server.js" in order to start the express server.

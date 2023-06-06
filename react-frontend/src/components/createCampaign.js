@@ -48,6 +48,10 @@ export default function CreateCampaign(props) {
                 console.error("Error:", error);
                 setLoading(false);
             });
+        setName("");
+        setDescription("");
+        setGoal("");
+        setDuration("");
     }
 
     return (
@@ -56,10 +60,10 @@ export default function CreateCampaign(props) {
             <select value={signer} id='contributor-select' onChange={(e) => { setSigner(e.target.value) }}>
                 <option>Select an address</option>{render_addresses}
             </select>
-            <input type='text' placeholder='campaign name' onChange={(e) => { setName(e.target.value) }}></input>
-            <input type='text' placeholder='campaign description' onChange={(e) => { setDescription(e.target.value) }}></input>
-            <input type='number' placeholder='funding goal' onChange={(e) => { setGoal(e.target.value) }}></input>
-            <input type='number' placeholder='duration' onChange={(e) => { setDuration(e.target.value) }}></input>
+            <input type='text' value={name} placeholder='campaign name' onChange={(e) => { setName(e.target.value) }}></input>
+            <input type='text' value={description} placeholder='campaign description' onChange={(e) => { setDescription(e.target.value) }}></input>
+            <input type='number' value={goal} placeholder='funding goal' onChange={(e) => { setGoal(e.target.value) }}></input>
+            <input type='number' value={duration} placeholder='duration' onChange={(e) => { setDuration(e.target.value) }}></input>
             <button className='inlineButton' onClick={handleCampaignCreation} disabled={!campaignData}>Create campaign</button>
             {loading && <h1>Loading...</h1>}
         </div>

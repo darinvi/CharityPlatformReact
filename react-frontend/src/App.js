@@ -4,6 +4,7 @@ import { useState } from 'react'
 import FetchAddresses from './components/fetchAddresses.js';
 import Deploy from './components/deploy.js';
 import Donate from './components/Donate.js';
+import Readme from './components/readme.js';
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
 
   return (
     <div>
+      <Readme />
       <FetchAddresses
         currentAddress={currentAddress}
         handleAddressSelect={handleAddressSelect}

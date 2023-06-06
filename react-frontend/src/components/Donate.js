@@ -5,8 +5,8 @@ export default function Donate(props) {
     const [loading, setLoading] = useState(false);
     const [id, setID] = useState("Not selected");
     const [amount, setAmount] = useState(null);
-    const [signer,setSigner] = useState(null);
-    
+    const [signer, setSigner] = useState(null);
+
 
     const render_addresses = props.allAddresses && props.allAddresses.map(e => {
         if (e.length > 1) {
@@ -44,22 +44,23 @@ export default function Donate(props) {
                 console.error("Error:", error);
                 setLoading(false);
             });
+        setAmount("")
     }
 
     return (
         <div>
             <label htmlFor='contributor-select'>Select signer</label>
-            <select id='contributor-select' onChange={(e)=>{setSigner(e.target.value)}}>
+            <select id='contributor-select' onChange={(e) => { setSigner(e.target.value) }}>
                 <option>Select an address</option>
                 {render_addresses}
             </select>
             <label htmlFor='contract-select'>Select campaign id</label>
-            <select id='contract-select' onChange={(e) => { setID(e.target.value) }}>
+            <select id='contract-select' value={id} onChange={(e) => { setID(e.target.value) }}>
                 <option value="Not selected">Select Id</option>
                 {render_campaigns}
             </select>
             <label htmlFor='amount'>ETH amount</label>
-            <input type='number' placeholder='amount in ETH' onChange={(e)=>{setAmount(e.target.value)}}></input>
+            <input type='number' value={amount} placeholder='amount in ETH' onChange={(e) => { setAmount(e.target.value) }}></input>
             <button className='inlineButton' onClick={handleButtonClick}>Donate</button>
             <p>Address Of campaign: {props.campaigns[id]}</p>
             {loading && <h1>Loading...</h1>}
