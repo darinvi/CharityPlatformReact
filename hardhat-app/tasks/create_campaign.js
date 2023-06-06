@@ -7,7 +7,7 @@ task("create-campaign", "Create a campaign")
     .addParam('duration', 'Duration of campaign')
     .setAction(async (taskArgs, hre) => {
 
-        const CharityPlatform = await hre.ethers.getContractFactory("CharityPlatform")
+        const CharityPlatform = await hre.ethers.getContractFactory("MockCharityPlatform")
 
         const platform = new hre.ethers.Contract(
             taskArgs.platform,

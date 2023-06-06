@@ -107,6 +107,8 @@ app.post('/create-campaign', (req, res) => {
 
   let scriptOutput = '';
 
+  console.log(scriptOutput);
+
   hardhatScript.stdout.on('data', (data) => {
     scriptOutput += data.toString();
   });

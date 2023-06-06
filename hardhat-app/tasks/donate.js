@@ -5,7 +5,7 @@ task("donate","Donate to a campaign")
     .addParam('value','Amount to donate')
     .setAction(async(taskArgs, hre) =>{
 
-        const CharityPlatform = await hre.ethers.getContractFactory("CharityPlatform");
+        const CharityPlatform = await hre.ethers.getContractFactory("MockCharityPlatform");
         
         const platform = new hre.ethers.Contract(
             taskArgs.platform,

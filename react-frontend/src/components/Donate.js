@@ -37,7 +37,6 @@ export default function Donate(props) {
         })
             .then((response) => response.json())
             .then((res) => {
-                console.log("Success:", res.output);
                 setLoading(false);
             })
             .catch((error) => {

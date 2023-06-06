@@ -2,9 +2,9 @@ task("deploy-contract","Deploy a contract")
     .addParam('deployer','Address of deployer')
     .setAction(async(taskArgs, hre) =>{
         // const [deployer] = await hre.ethers.getSigners();
-        const CrowdFundingPlatformFactory = await hre.ethers.getContractFactory("CharityPlatform",taskArgs.deployer);
+        const CharityPlatform = await hre.ethers.getContractFactory("MockCharityPlatform",taskArgs.deployer);
         
-        const platform = await CrowdFundingPlatformFactory.deploy();
+        const platform = await CharityPlatform.deploy();
         
         await platform.deployed();
 
