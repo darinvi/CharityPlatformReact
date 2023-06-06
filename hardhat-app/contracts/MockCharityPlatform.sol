@@ -4,7 +4,7 @@ pragma solidity 0.8.17;
 import './Campaign.sol';
 import './CampaignInterface.sol';
 
-contract CharityPlatform {
+contract MockCharityPlatform {
 
     event CampaignCreated(uint indexed id, address indexed campaign);
     event DonationMade(uint indexed id, address indexed donator, uint amount);
@@ -87,5 +87,15 @@ contract CharityPlatform {
         require(success,"err");
 
         emit Refund(id, msg.sender, balance);
+    }
+
+
+    //FUNCTIONS USED FOR TESTING
+    function getCampaignAddress(uint id) external view returns(address){
+        return campaigns[id];
+    }
+
+    function getCampaignBalance(uint id) external view returns(uint){
+        return CampaignInterface(campaigns[id]).totalSupply();
     }
 }

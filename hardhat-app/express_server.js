@@ -112,7 +112,7 @@ app.post('/create-campaign', (req, res) => {
   });
 
   hardhatScript.stderr.on('data', (data) => {
-    console.error(data.trim().toString());
+    console.error(data.toString());
   });
 
   hardhatScript.on('close', (code) => {

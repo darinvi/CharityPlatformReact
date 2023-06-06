@@ -1,5 +1,7 @@
 # CharityPlatformReact
 
+Node modules deleted due to SoftUni's upload limit! Make sure they are installed in both hardhat and react folders!
+
 1. cd .\hardhat-app\ to for the express server and hardhat node.
     
     - Run "npm install"

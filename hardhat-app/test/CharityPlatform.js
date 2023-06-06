@@ -10,19 +10,16 @@ const { expectRevert } = require("@openzeppelin/test-helpers");
 
 describe("CharityPlatform", function () {
 
-    let charityPlatformUser, deployer, firstUser, secondUser, thirdUser;
+    let deployer, firstUser, secondUser, thirdUser;
 
     this.beforeAll(async function () {
 
         [deployer, firstUser, secondUser, thirdUser] = await ethers.getSigners();
-
-        // const { platform } = await loadFixture(deployPlatform);
-        // charityPlatformUser = getFirstUserCharityPlatform(platform, firstUser);
     })
 
     async function deployPlatform() {
 
-        const CharityPlatformFactory = await ethers.getContractFactory("CharityPlatform", deployer);
+        const CharityPlatformFactory = await ethers.getContractFactory("MockCharityPlatform", deployer);
         const platform = await CharityPlatformFactory.deploy();
 
         //ethers.utils.parseEther(val) used many times so returning it from toWei
@@ -73,7 +70,7 @@ describe("CharityPlatform", function () {
 
             delay(6000);
 
-            expect(await currUser.donate(0, { value: amount })).to.be.revertedWith("Can't refund successful campaign")
+            expect(await currUser.donate(0, { value: amount })).to.be.revertedWith("campaign expired")
 
         });
 
@@ -98,10 +95,6 @@ describe("CharityPlatform", function () {
             const { platform } = await loadFixture(createLongCampaign);
             
             let currUser = await platform.connect(secondUser);
-            
-            //100 is the funding goal
-            const amount = toWei("100");
-            await currUser.donate(0, { value: amount })
 
             currUser = await platform.connect(deployer)
 
@@ -113,30 +106,53 @@ describe("CharityPlatform", function () {
             }
         });
 
-        // it("should succeed", async function () {
-        //     const { platform } = await loadFixture(makeDonation);
 
-        //     //connecting the creator after making contributions with other accounts
-        //     const charityPlatformUser = platform.connect(firstUser);
+        it("Should revert if already collected", async function () {
 
-        //     //first calling 
-        //     let balance = BigInt(await ethers.provider.getBalance(secondUser.address));
+            const { platform } = await loadFixture(createLongCampaign);
+            
+            let currUser = await platform.connect(secondUser);
+            
+            // 100 is the funding goal
+            const amount = toWei("100");
+            await currUser.donate(0, { value: amount });
 
-        //     await expect(balance < toWei("10000")).to.equal(true);
+            currUser = await platform.connect(firstUser)
+            await currUser.collectFunds(0, firstUser.address);
+            
+            try {
+                await currUser.collectFunds(0, firstUser.address);
+            }
+            catch (error) {
+                expectRevert(error, "Already collected");
+            }
 
-        //     await charityPlatformUser.distribute(0, { value: toWei("10") });
+        });
 
-        //     balance = BigInt(await ethers.provider.getBalance(secondUser.address));
-        //     await expect(balance > toWei("10000")).to.equal(true);
 
-        // });
+        it("Should succeed", async function () {
+
+            const { platform } = await loadFixture(createLongCampaign);
+            
+            let currUser = await platform.connect(secondUser);
+            
+            // 100 is the funding goal
+            const amount = toWei("100");
+            await currUser.donate(0, { value: amount });
+
+            const balanceBefore = BigInt(await ethers.provider.getBalance(firstUser.address));
+
+            currUser = await platform.connect(firstUser)
+            await currUser.collectFunds(0, firstUser.address);
+
+            const balanceAfter = BigInt(await ethers.provider.getBalance(firstUser.address));
+            
+            expect(balanceBefore < balanceAfter).to.equal(true);
+
+        });
     });
 });
 
-
-async function getFirstUserCharityPlatform(platform, firstUser) {
-    return platform.connect(firstUser)
-}
 
 function delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
