@@ -62,7 +62,7 @@ export default function Donate(props) {
             <label htmlFor='amount'>ETH amount</label>
             <input type='number' value={amount} placeholder='amount in ETH' onChange={(e) => { setAmount(e.target.value) }}></input>
             <button className='inlineButton' onClick={handleButtonClick}>Donate</button>
-            <p>Address Of campaign: {props.campaigns[id]}</p>
+            {/* <p>Address Of campaign: {props.campaigns[id]}</p> */}
             {loading && <h1>Loading...</h1>}
         </div>
     );

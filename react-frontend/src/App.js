@@ -5,6 +5,7 @@ import FetchAddresses from './components/fetchAddresses.js';
 import Deploy from './components/deploy.js';
 import Donate from './components/Donate.js';
 import Readme from './components/readme.js';
+import ListCampaigns from './components/listCampaigns.js'
 
 function App() {
 
@@ -49,6 +50,7 @@ function App() {
           allContracts={allContracts}
           campaigns={campaigns}
         />}
+        {Object.keys(campaigns).length > 0 && <ListCampaigns campaigns={campaigns}/>}
     </div>
   );
 }
