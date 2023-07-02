@@ -1,26 +1,14 @@
 import { useState } from 'react'
-import CreateCampaign from './createCampaign';
+import CreateCampaign from './CreateCampaign';
 
 export default function Deploy(props) {
 
-    // const [deployedAddress, setDeployedAddress] = useState(null)
     const [loading, setLoading] = useState(false);
     const [deployed, setDeployed] = useState(false);
 
     function handleButtonClick() {
         setLoading(true);
-        fetch(`http://localhost:5000/deploy-contract?address=${props.deployer}`)
-            .then((response) => response.json())
-            .then((jsonData) => {
-                props.setDeployedAddress(jsonData.output);
-                setLoading(false);
-                setDeployed(true);
-            })
-            .catch((error) => {
-                console.log('Error:', error);
-                setLoading(false);
-            });
-    }
+        setLoading(false);
 
     return (
         <div>

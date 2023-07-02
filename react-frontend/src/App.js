@@ -1,20 +1,37 @@
 import './App.css';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { ethers } from 'ethers';
 
-import FetchAddresses from './components/fetchAddresses.js';
-import Deploy from './components/deploy.js';
+import FetchAddresses from './components/FetchAddresses.js';
+import Deploy from './components/Deploy.js';
 import Donate from './components/Donate.js';
 import Readme from './components/readme.js';
-import ListCampaigns from './components/listCampaigns.js'
+import ListCampaigns from './components/ListCampaigns.js'
 
 function App() {
 
   const [currentAddress, setCurrentAddress] = useState(null);
-  const [allAddresses, setAllAddresses] = useState(null);
   const [allContracts, setAllContracts] = useState(null);
   const [currentContract, setCurrentContract] = useState(null);
   const [deployedAddress, setDeployedAddress] = useState(null);
   const [campaigns, setCampaigns] = useState({});
+  
+  const [provider, setProvider] = useState(null);
+  const [allAddresses, setAllAddresses] = useState(null);
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const provider = new ethers.providers.JsonRpcProvider('http://localhost:8545');
+        const accounts = await provider.listAccounts();
+        setProvider(provider);
+        setAllAddresses(accounts)
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchAccounts();
+  }, []);
 
 
   function handleAddressSelect(e) {
@@ -30,6 +47,7 @@ function App() {
         allAddresses={allAddresses}
         setAllAddresses={setAllAddresses}
       />
+      
       {currentAddress &&
         <Deploy
           deployedAddress={deployedAddress}
@@ -40,7 +58,9 @@ function App() {
           setAllContracts={setAllContracts}
           campaigns={campaigns}
           setCampaigns={setCampaigns}
+          Provider={provider}
         />}
+
       {(allAddresses && currentAddress && Object.keys(campaigns).length > 0) &&
         <Donate
           deployedAddress={deployedAddress}

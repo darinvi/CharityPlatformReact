@@ -6,6 +6,7 @@
     "hardhat-deploy": "^0.11.30"
   },
   "dependencies": {
+    "@openzeppelin/contracts": "^4.9.2",
     "@openzeppelin/test-helpers": "^0.5.16",
     "ethers": "5.7.2",
     "express": "^4.18.2"
