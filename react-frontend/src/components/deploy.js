@@ -8,8 +8,11 @@ export default function Deploy(props) {
 
     function handleButtonClick() {
         setLoading(true);
-        setLoading(false);
+        
+        props.provider.
 
+        setLoading(false);
+    }
     return (
         <div>
             <button onClick={handleButtonClick} disabled={deployed}>deploy with deployer </button>

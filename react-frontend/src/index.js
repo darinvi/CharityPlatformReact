@@ -2,11 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { UseContext } from './hooks/Context';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <UseContext RpcUrl="http://localhost:8545">
+        <App />
+    </UseContext>
   </React.StrictMode>
 );
 

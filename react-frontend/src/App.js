@@ -3,10 +3,12 @@ import { useState, useEffect } from 'react'
 import { ethers } from 'ethers';
 
 import FetchAddresses from './components/FetchAddresses.js';
-import Deploy from './components/Deploy.js';
 import Donate from './components/Donate.js';
 import Readme from './components/readme.js';
 import ListCampaigns from './components/ListCampaigns.js'
+import Deploy from './components/Deploy.js';
+import { useProvider } from './hooks/Provider';
+import { useAccounts } from './hooks/Accounts';
 
 function App() {
 
@@ -15,23 +17,6 @@ function App() {
   const [currentContract, setCurrentContract] = useState(null);
   const [deployedAddress, setDeployedAddress] = useState(null);
   const [campaigns, setCampaigns] = useState({});
-  
-  const [provider, setProvider] = useState(null);
-  const [allAddresses, setAllAddresses] = useState(null);
-
-  useEffect(() => {
-    const fetchAccounts = async () => {
-      try {
-        const provider = new ethers.providers.JsonRpcProvider('http://localhost:8545');
-        const accounts = await provider.listAccounts();
-        setProvider(provider);
-        setAllAddresses(accounts)
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchAccounts();
-  }, []);
 
 
   function handleAddressSelect(e) {
@@ -44,11 +29,9 @@ function App() {
       <FetchAddresses
         currentAddress={currentAddress}
         handleAddressSelect={handleAddressSelect}
-        allAddresses={allAddresses}
-        setAllAddresses={setAllAddresses}
       />
-      
-      {currentAddress &&
+
+      {/* {currentAddress &&
         <Deploy
           deployedAddress={deployedAddress}
           setDeployedAddress={setDeployedAddress}
@@ -70,7 +53,7 @@ function App() {
           allContracts={allContracts}
           campaigns={campaigns}
         />}
-        {Object.keys(campaigns).length > 0 && <ListCampaigns campaigns={campaigns}/>}
+      {Object.keys(campaigns).length > 0 && <ListCampaigns campaigns={campaigns} />} */}
     </div>
   );
 }
