@@ -2,7 +2,7 @@ import './App.css';
 import { useState, useEffect } from 'react'
 import { ethers } from 'ethers';
 
-import FetchAddresses from './components/FetchAddresses.js';
+import AddressSelect from './components/AddressSelect.js';
 import Donate from './components/Donate.js';
 import Readme from './components/readme.js';
 import ListCampaigns from './components/ListCampaigns.js'
@@ -26,10 +26,7 @@ function App() {
   return (
     <div>
       <Readme />
-      <FetchAddresses
-        currentAddress={currentAddress}
-        handleAddressSelect={handleAddressSelect}
-      />
+      <Deploy />
 
       {/* {currentAddress &&
         <Deploy

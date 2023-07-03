@@ -1,30 +1,36 @@
 import { useState } from 'react'
-import CreateCampaign from './CreateCampaign';
+import AddressSelect from './AddressSelect';
+import { useProvider } from '../hooks/Provider';
+import Contract from '../contract-artifacts/CharityPlatform.json';
+import { ethers } from 'ethers';
+
 
 export default function Deploy(props) {
 
-    const [loading, setLoading] = useState(false);
-    const [deployed, setDeployed] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [deployedAddress, setDeployedAddress] = useState(null);
+  const provider = useProvider()
+  const abi = Contract.abi;
+  const bytecode = Contract.bytecode;
+  const contractFactory = deployedAddress && new ethers.ContractFactory(abi, bytecode, provider.getSigner(selectedAddress))
+  let deployedContract;
 
-    function handleButtonClick() {
-        setLoading(true);
-        
-        props.provider.
+  async function handleButtonClick() {
+    deployedContract = await contractFactory.deploy()
+    await deployedContract.deployed();
+    setDeployedAddress(deployedContract.address)
+  }
 
-        setLoading(false);
-    }
-    return (
-        <div>
-            <button onClick={handleButtonClick} disabled={deployed}>deploy with deployer </button>
-            {loading && <h1>Loading...</h1>}
-            {(props.deployedAddress && !loading) && <h1>Successfully deployed at: {props.deployedAddress}</h1>}
-            {deployed && <CreateCampaign
-                deployedAddress={props.deployedAddress}
-                allAddresses={props.allAddresses}
-                campaigns={props.campaigns}
-                setCampaigns={props.setCampaigns}
-            />}
-        </div>
-    );
+  return (
+    <div>
+      <AddressSelect
+        labelID='deployer-select'
+        labelText='Select deployer'
+        setAddress={setSelectedAddress}
+      />
+
+      <button onClick={handleButtonClick} disabled={false}>deploy with deployer </button>
+    </div>
+  );
 }
 
