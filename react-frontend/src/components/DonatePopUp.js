@@ -11,13 +11,14 @@ export default function DonatePopUp(props) {
   const [name, setName] = useState(null);
   const [description, setDescription] = useState(null);
   const [totalSupply, setTotalSupply] = useState(null);
-  const [donators, setDonatros] = useState(null);
+  const [deadline, setDeadline] = useState(null);
 
   async function getContractInfo() {
     const factory = new ethers.Contract(props.contractAddress, Contract.abi, provider.getSigner())
     setName(await factory.name())
     setDescription(await factory.description())
     setTotalSupply((await factory.totalSupply()).toNumber())
+    setDeadline((await factory.deadline()).toNumber())
   } 
 
   async function openPopup() {
@@ -37,6 +38,7 @@ export default function DonatePopUp(props) {
           <h3>Contract name: {name}</h3>
           <p>Description: {description}</p>
           <p>Supply: {totalSupply}</p>
+          <p>Deadline: {new Date(deadline*1000).toLocaleDateString()}</p>
           <button onClick={closePopup}>Close</button>
       </div>}
     </>

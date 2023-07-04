@@ -11,7 +11,7 @@ function App() {
     <section className='App'>
       <div className='background'></div>
       <section className='main-section'>
-        <Deploy handleDeployment={[deployedAddress, setDeployedAddress]} />
+        <Deploy deploymentAddress={deployedAddress} setDeploymentAddress={setDeployedAddress} />
       </section>
       {deployedAddress &&
         <div className='list-campaigns'>

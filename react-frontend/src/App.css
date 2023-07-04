@@ -49,6 +49,7 @@ input {
   flex-direction: column;
 }
 
+
 .list-campaigns button {
   margin: 0 auto;
 }
@@ -59,10 +60,10 @@ input {
 
 .donate {
   background-color: rgba(0, 0, 0, 0.3);
-  /* opacity: 0.4; */
   margin: 1em 0;
   color: white;
   padding: 1em;
+  border-radius: 12px;
 }
 
 html {

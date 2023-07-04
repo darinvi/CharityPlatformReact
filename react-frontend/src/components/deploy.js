@@ -14,11 +14,11 @@ export default function Deploy(props) {
     if (factory){
       const deployedContract = await factory.deploy();
       await deployedContract.deployed();
-      props.handleDeployment[1](deployedContract.address);
+      props.setDeploymentAddress(deployedContract.address);
     }
   }
 
-  const buttonVisibility = !selectedAddress || props.handleDeployment[0]
+  const buttonVisibility = !selectedAddress || props.deploymentAddress
 
   return (
     <>
@@ -29,10 +29,10 @@ export default function Deploy(props) {
         setAddress={setSelectedAddress}
       />
       <button onClick={handleButtonClick} disabled={buttonVisibility}>deploy with deployer </button>
-      {props.handleDeployment[0] && <h3>Charity Platform deployed at: {props.handleDeployment[0]}</h3>}
+      {props.deploymentAddress && <h3>Charity Platform deployed at: {props.deploymentAddress}</h3>}
     </section>
 
-    { props.handleDeployment[0] && <CreateCampaign contractAddress={props.handleDeployment[0]} campaignSetter={props.campaignSetter} />}
+    { props.deploymentAddress && <CreateCampaign contractAddress={props.deploymentAddress} campaignSetter={props.campaignSetter} />}
     </>
   );
 }

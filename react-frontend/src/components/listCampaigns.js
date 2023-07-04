@@ -10,7 +10,6 @@ export default function ListCampaigns(props) {
 
   const contract = useContract(props.contractAddress, selectedAddress)
 
-
   async function handleButtonClick() {
     const campaignsCounter = (await contract.currCharity()).toNumber()
     const updateCampaigns = {}
@@ -22,7 +21,7 @@ export default function ListCampaigns(props) {
   }
 
   const renderCampaigns = campaigns && Object.entries(campaigns).map( e => {
-    return <Donate index={e[0]} address={e[1]} />
+    return <Donate index={e[0]} address={e[1]} platformAddress={props.contractAddress} signer={selectedAddress} />
   })
 
   return (

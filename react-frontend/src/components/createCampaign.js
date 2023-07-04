@@ -18,6 +18,10 @@ export default function CreateCampaign(props) {
   async function handleCampaignCreation() {
     if (contract){
       const tx = await contract.createCharity(name, description, goal, duration);
+      setName('');
+      setDescription('');
+      setGoal('');
+      setDuration('');
     } 
   }
 
