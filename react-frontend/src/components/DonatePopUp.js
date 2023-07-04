@@ -14,18 +14,24 @@ export default function DonatePopUp(props) {
   const [deadline, setDeadline] = useState(null);
 
   async function getContractInfo() {
-    const factory = new ethers.Contract(props.contractAddress, Contract.abi, provider.getSigner())
-    setName(await factory.name())
-    setDescription(await factory.description())
-    setTotalSupply((await factory.totalSupply()).toNumber())
-    setDeadline((await factory.deadline()).toNumber())
-  } 
+    try {
+      const factory = new ethers.Contract(props.contractAddress, Contract.abi, provider.getSigner())
+      setName(await factory.name())
+      setDescription(await factory.description())
+      setTotalSupply((await factory.totalSupply()).toNumber())
+      setDeadline((await factory.deadline()).toNumber())
+    } catch (err) {
+      if (err.reason == 'campaign has reached its goal') {
+        console.log(err)
+      }
+    }
+  }
 
   async function openPopup() {
     await getContractInfo()
     setIsOpen(true)
-  };
-  
+  }
+
   function closePopup() {
     setIsOpen(false)
   };
@@ -38,9 +44,9 @@ export default function DonatePopUp(props) {
           <h3>Contract name: {name}</h3>
           <p>Description: {description}</p>
           <p>Supply: {totalSupply}</p>
-          <p>Deadline: {new Date(deadline*1000).toLocaleDateString()}</p>
+          <p>Deadline: {new Date(deadline * 1000).toLocaleDateString()}</p>
           <button onClick={closePopup}>Close</button>
-      </div>}
+        </div>}
     </>
   )
 }
