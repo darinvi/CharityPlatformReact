@@ -2,10 +2,21 @@ button {
   display: block;
 }
 
-.inlineButton {
-  display: inline;
+section {
+  margin: 3em 0;
 }
 
-div {
-  margin-top: 3rem;
+.campaign-section {
+  display: flex;
+  height: 3em;
+  align-items: center;
+}
+
+.main-input {
+  width: 75%;
+}
+
+select, 
+input {
+  width: 10em;
 }
