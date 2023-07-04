@@ -38,6 +38,7 @@ input {
 .App {
   display: flex;
   gap: 1em;
+  align-items: center;
 }
 
 .App button {

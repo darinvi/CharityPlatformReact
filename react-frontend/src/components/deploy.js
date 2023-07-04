@@ -5,9 +5,7 @@ import CreateCampaign from './CreateCampaign';
 
 export default function Deploy(props) {
 
-  const [selectedAddress, setSelectedAddress] = useState(null);
-  
-  // const [loading, setLoading] = useState(null)
+  const [selectedAddress, setSelectedAddress] = useState(null);  
   const factory = useFactory(selectedAddress)
 
   async function handleButtonClick() {

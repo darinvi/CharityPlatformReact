@@ -9,7 +9,8 @@ export default function CreateCampaign(props) {
   const [goal, setGoal] = useState(null);
   const [duration, setDuration] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
-  
+  const [loading, setLoading] = useState(false);
+
   const contract = useContract(props.contractAddress, selectedAddress);
 
 
@@ -17,15 +18,18 @@ export default function CreateCampaign(props) {
 
   async function handleCampaignCreation() {
     if (contract){
+      setLoading(true)
       const tx = await contract.createCharity(name, description, goal, duration);
       setName('');
       setDescription('');
       setGoal('');
       setDuration('');
+      setLoading(false)
     } 
   }
 
   return (
+    <>
     <section className='campaign-section'>
       <AddressSelect
         labelID='creator-select'
@@ -39,6 +43,8 @@ export default function CreateCampaign(props) {
       <input type='number' value={duration} placeholder='duration' onChange={(e) => { setDuration(e.target.value) }}></input>
       <button onClick={handleCampaignCreation} disabled={!buttonVisibility}>Create campaign</button>
     </section>
+    {loading && <h4>Loading...</h4>}
+    </>
   );
 }
 
