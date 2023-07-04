@@ -1,7 +1,3 @@
-button {
-  display: block;
-}
-
 section {
   margin: 3em 0;
 }
@@ -12,11 +8,63 @@ section {
   align-items: center;
 }
 
-.main-input {
-  width: 75%;
+.main-section {
+  padding-left: 0.8em;
+  width: 70%;
+  color: white;
+  font-weight: bolder;
 }
 
-select, 
-input {
+select {
   width: 10em;
+}
+
+input {
+  width: 7em;
+}
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-image: url(../public/blockchain.jpg);
+  background-size: cover;
+  filter: blur(6px);
+}
+
+.App {
+  display: flex;
+  gap: 1em;
+}
+
+.App button {
+  height: auto;
+}
+
+.list-campaigns {
+  display: flex;
+  flex-direction: column;
+}
+
+.list-campaigns button {
+  margin: 0 auto;
+}
+
+.donate input {
+  width: 10em;
+}
+
+.donate {
+  background-color: rgba(0, 0, 0, 0.3);
+  /* opacity: 0.4; */
+  margin: 1em 0;
+  color: white;
+  padding: 1em;
+}
+
+html {
+  font-size: 26px;
 }

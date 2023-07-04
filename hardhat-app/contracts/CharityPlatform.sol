@@ -22,10 +22,10 @@ contract CharityPlatform {
     uint public currCharity;
     
     function createCharity(
-    string memory name,
-    string memory description,
-    uint fundingGoal,
-    uint duration)
+        string memory name,
+        string memory description,
+        uint fundingGoal,
+        uint duration)
     external {
         campaigns[currCharity] = address(new Campaign(name,description,fundingGoal,duration,msg.sender));
         emit CampaignCreated(currCharity, campaigns[currCharity]);

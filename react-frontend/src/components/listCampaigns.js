@@ -1,14 +1,40 @@
+import { useState } from "react";
+import AddressSelect from "./AddressSelect";
+import useContract from "../hooks/useContract";
+import Donate from "./Donate";
+
 export default function ListCampaigns(props) {
 
-    const render_campaigns = Object.keys(props.campaigns).length > 0 && Object.entries(props.campaigns).map(([key,value]) => {
-        return <p>Campaign Id: {key} with address: {value}</p>
-    });
+  const [selectedAddress, setSelectedAddress] = useState(null)
+  const [campaigns, setCampaigns] = useState({})
 
-    return (
-        <div>
-        {render_campaigns && <h1>Campaigns:</h1>}
-        {render_campaigns}
-        </div>
-    );
+  const contract = useContract(props.contractAddress, selectedAddress)
+
+
+  async function handleButtonClick() {
+    const campaignsCounter = (await contract.currCharity()).toNumber()
+    const updateCampaigns = {}
+    for (let i = 0; i < campaignsCounter; i++) {
+      const campaignAddress = await contract.getCampaignAddress(i)
+      updateCampaigns[i] = campaignAddress
+    }
+    setCampaigns({...updateCampaigns})
+  }
+
+  const renderCampaigns = campaigns && Object.entries(campaigns).map( e => {
+    return <Donate index={e[0]} address={e[1]} />
+  })
+
+  return (
+    <>
+      <AddressSelect
+        labelID='signer-select'
+        labelText='Select signer'
+        setAddress={setSelectedAddress}
+      />
+      <button onClick={handleButtonClick}>Refresh campaigns</button>
+      {Object.entries(campaigns).length > 0 ? renderCampaigns : <p>No campaigns yet</p>}
+    </>
+  );
 }
 

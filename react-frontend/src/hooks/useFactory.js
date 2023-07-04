@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import Contract from '../contract-artifacts/CharityPlatform.json';
+import Contract from '../contract-artifacts/MockCharityPlatform.json';
 import { useEffect, useState } from "react";
 import { useProvider } from "./Provider";
 

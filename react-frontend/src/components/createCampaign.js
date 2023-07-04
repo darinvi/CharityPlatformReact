@@ -9,17 +9,16 @@ export default function CreateCampaign(props) {
   const [goal, setGoal] = useState(null);
   const [duration, setDuration] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
-  const [loading, setLoading] = useState(false);
   
   const contract = useContract(props.contractAddress, selectedAddress);
 
 
   const buttonVisibility = name && description && goal && duration && selectedAddress;
 
-  function handleCampaignCreation() {
+  async function handleCampaignCreation() {
     if (contract){
-      contract.createCharity(name, description, goal, duration)
-    }  
+      const tx = await contract.createCharity(name, description, goal, duration);
+    } 
   }
 
   return (
@@ -30,12 +29,11 @@ export default function CreateCampaign(props) {
         setAddress={setSelectedAddress}
       />
 
-      <input type='text' value={name} placeholder='campaign name' onChange={(e) => { setName(e.target.value) }}></input>
-      <input type='text' value={description} placeholder='campaign description' onChange={(e) => { setDescription(e.target.value) }}></input>
+      <input type='text' value={name} placeholder='name' onChange={(e) => { setName(e.target.value) }}></input>
+      <input type='text' value={description} placeholder='description' onChange={(e) => { setDescription(e.target.value) }}></input>
       <input type='number' value={goal} placeholder='funding goal' onChange={(e) => { setGoal(e.target.value) }}></input>
       <input type='number' value={duration} placeholder='duration' onChange={(e) => { setDuration(e.target.value) }}></input>
       <button onClick={handleCampaignCreation} disabled={!buttonVisibility}>Create campaign</button>
-      {loading && <h1>Loading...</h1>}
     </section>
   );
 }

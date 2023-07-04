@@ -6,7 +6,7 @@ import CreateCampaign from './CreateCampaign';
 export default function Deploy(props) {
 
   const [selectedAddress, setSelectedAddress] = useState(null);
-  const [deployedAddress, setDeployedAddress] = useState(null);
+  
   // const [loading, setLoading] = useState(null)
   const factory = useFactory(selectedAddress)
 
@@ -14,11 +14,11 @@ export default function Deploy(props) {
     if (factory){
       const deployedContract = await factory.deploy();
       await deployedContract.deployed();
-      setDeployedAddress(deployedContract.address);
+      props.handleDeployment[1](deployedContract.address);
     }
   }
 
-  const buttonVisibility = !selectedAddress || deployedAddress
+  const buttonVisibility = !selectedAddress || props.handleDeployment[0]
 
   return (
     <>
@@ -29,10 +29,10 @@ export default function Deploy(props) {
         setAddress={setSelectedAddress}
       />
       <button onClick={handleButtonClick} disabled={buttonVisibility}>deploy with deployer </button>
-      {deployedAddress && <h3>Charity Platform deployed at: {deployedAddress}</h3>}
+      {props.handleDeployment[0] && <h3>Charity Platform deployed at: {props.handleDeployment[0]}</h3>}
     </section>
 
-    { deployedAddress && <CreateCampaign contractAddress={deployedAddress} />}
+    { props.handleDeployment[0] && <CreateCampaign contractAddress={props.handleDeployment[0]} campaignSetter={props.campaignSetter} />}
     </>
   );
 }
